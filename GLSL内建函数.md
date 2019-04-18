@@ -1,0 +1,172 @@
+## GLSL内建函数
+
+### 三角函数
+
+下标用anyFloat来表示float、vec2、vec3和vec4中的一种：  
+
+三角函数
+
+| **函数**                             | **描述**             |
+| ------------------------------------ | -------------------- |
+| anyFloat radians(anyFloat degrees)   | 将角度值转化为弧度值 |
+| anyFloat degrees(anyFloat radians)   | 将弧度值转化为角度值 |
+| anyFloat sin(anyFloat angle)         | 三角正弦             |
+| anyFloat cos(anyFLoat angle)         | 三角余弦             |
+| anyFloat tan(anyFLoat angle)         | 三角正切             |
+| anyFloat asin(anyFloat x)            | 反正弦               |
+| anyFloat acos(anyFloat x)            | 反余弦               |
+| anyFloat atan(anyFloat y,anyFloat x) | y/x的反正切          |
+| anyFloat sinh(anyFloat x)            | 双曲正弦             |
+| anyFloat cosh(anyFloat x)            | 双曲余弦             |
+| anyFloat tanh(anyFloat x)            | 双曲正切             |
+| anyFloat asinh(anyFloat x)           | 反双曲正弦           |
+| anyFloat acosh(anyFloat x)           | 反双曲余弦           |
+| anyFloat atanh(anyFloat x)           | 反双曲正切           |
+
+### 指数函数
+
+指数函数
+
+| **函数**                            | **描述**             |
+| ----------------------------------- | -------------------- |
+| anyFloat pow(anyFLoat x,anyFloat y) | x的y次方             |
+| anyFloat exp(anyFLoat x)            | x的自然指数          |
+| anyFloat log(anyFloat x)            | x的自然对数          |
+| anyFloat exp2(anyFloat x)           | 2的x次方             |
+| anyFloat log2(anyFLoat angle)       | 以2为底的x的自然对数 |
+| anyFloat sqrt(anyFloat x)           | x的平方根            |
+| anyFloat inversesqrt(anyFloat x)    | x的逆平方根          |
+
+
+
+### 几何函数
+
+几何函数
+
+| **函数**                              | **描述**                                                  |
+| ------------------------------------- | --------------------------------------------------------- |
+| float length(vec2/vec3/vec4 x)        | 返回x向量的长度                                           |
+| float distance(vec p0,vec p1)         | 返回p0和p1之间的距离                                      |
+| float dot(vec x,vec y)                | 返回x和y的点乘结果                                        |
+| vec3 cross(vec3 x,vec3 y)             | 返回x和y的叉乘结果                                        |
+| vec normalize(vec x)                  | 返回和x方向相同的单位长度向量                             |
+| vec faceforward(vec N,vec I,vec nRef) | 如果dot(Nref,l)<0则返回N，否则返回-N                      |
+| vec reflect(vec l,vec N)              | 返回反射向量，参数：入射向量l，表面法向量N                |
+| vec refract(vec l,vec N,float eta)    | 返回折射向量，参数：入射向量l，表面法向量N和折射指数比eta |
+
+### 矩阵函数
+
+许多矩阵操作都是使用常规数学运算符进行的，不过还有一些有用的矩阵函数： 
+
+矩阵函数
+
+| **函数**                           | **描述**                                               |
+| ---------------------------------- | ------------------------------------------------------ |
+| mat matrixCompMult(mat x,mat y)    | 逐个分量地将两个矩阵相乘。与线性代数的矩阵乘法不同     |
+| mat2 outerProduct(vec2 c,vec2 r)   | 返回一个矩阵，这个矩阵是指定的两个向量的外积（叉乘积） |
+| mat3 outerProduct(vec3 c,vec3 r)   |                                                        |
+| mat4 outerProduct(vec4 c,vec4 r)   |                                                        |
+| mat2X3 outerProduct(vec3 c,vec2 r) |                                                        |
+| mat3X2 outerProduct(vec2 c,vec3 r) |                                                        |
+| mat2X4 outerProduct(vec4 c,vec2 r) |                                                        |
+| mat4X2 outerProduct(vec2 c,vec4 r) |                                                        |
+| mat3X4 outerProduct(vec4 c,vec3 r) |                                                        |
+| mat4X3 outerProduct(vec3 c,vec4 r) |                                                        |
+| mat2 transpose(mat2 m)             | 返回一个矩阵，这个矩阵是指定就很的转置矩阵             |
+| mat3 transpose(mat3 m)             |                                                        |
+| mat4 transpose(mat4 m)             |                                                        |
+| mat2X3 transpose(mat3X2 m)         |                                                        |
+| mat3X2 transpose(mat2X3 m)         |                                                        |
+| mat2X4 transpose(mat4X2 m)         |                                                        |
+| mat4X2 transpose(mat2X4 m)         |                                                        |
+| mat3X4 transpose(mat4X3 m)         |                                                        |
+| mat4X3 transpose(mat3X4 m)         |                                                        |
+| float determinant(mat2 m)          | 返回一个矩阵，这个矩阵是指定矩阵的行列式               |
+| float determinant(mat3 m)          |                                                        |
+| float determinant(mat4 m)          |                                                        |
+| mat2 inverse(mat2 m)               | 返回一个矩阵，这个矩阵是指定矩阵的逆矩阵               |
+| mat3 inverse(mat3 m)               |                                                        |
+| mat4 inverse(mat4 m)               |                                                        |
+
+### 向量相关函数
+
+向量之间的比较，要使用下标列出的这些函数： 
+
+向量相关函数
+
+| **函数**                              | **描述**                        |
+| ------------------------------------- | ------------------------------- |
+| bvec lessThan(vec x,vec y)            | 逐个分量地返回x                 |
+| bvec lessThan(ivec x,ivec y)          |                                 |
+| bvec lessThan(uvec x,uvec y)          |                                 |
+| bvec lessThanEqual(vec x,vec y)       | 逐个分量地返回x<=y的结果        |
+| bvec lessThanEquea(ivec x,ivec y)     |                                 |
+| bvec lessThanEqual(uvec x,uvec y)     |                                 |
+| bvec greaterThan(vec x,vec y)         | 逐个分量地返回x>y的结果         |
+| bvec greaterThan(ivec x,ivec y)       |                                 |
+| bvec greaterThan(uvec x,uvec y)       |                                 |
+| bvec greaterThanEqual(vec x,vec y)    | 逐个分量地返回x>=y的结果        |
+| bvec greaterThanEqual (ivec x,ivec y) |                                 |
+| bvec greaterThanEqual (uvec x,uvec y) |                                 |
+| bvec equal(vec x,vec y)               | 逐个分量地返回x==y的结果        |
+| bvec equal(ivec x,ivec y)             |                                 |
+| bvec equal(uvec x,uvec y)             |                                 |
+| bvec notEqual(vec x,vec y)            | 逐个分量地返回x！=y的结果       |
+| bvec notEqual (ivec x,ivec y)         |                                 |
+| bvec notEqual (uvec x,uvec y)         |                                 |
+| bool any(bvec x)                      | 如果x的任意分量为真，则返回真   |
+| bool all(bvec x)                      | 如果x的所有分量都为真，则返回真 |
+| bvec not(bvec x)                      | 返回x的逐个分量的补集           |
+
+### 常用函数
+
+所有这些函数都能用于标量和向量数据类型的运算，并且也返回标量和向量数据类型： 
+
+矩阵函数 通用函数
+
+| 函数                                                         | 描述                                                         |
+| :----------------------------------------------------------- | ------------------------------------------------------------ |
+| anyFloat abs(anyFLoat x)                                     | 返回x的绝对值                                                |
+| anyInt abs(anyInt x)                                         |                                                              |
+| anyFLoat sign(anyFloat x)                                    | 返回1.0或-1.0，取决于x                                       |
+| anyInt sign(anyInt x)                                        |                                                              |
+| anyFloat floor(anyFLoat x)                                   | 返回不大于x的最小整数                                        |
+| anyFloat trunc(anyFloat x)                                   | 返回不大于x的最接近的整数                                    |
+| anyFloat round(anyFloat x)                                   | 返回最接近x的整数的值。如果是小数部分为0.5则可能取任意一个方向的整数（根据具体实现而定） |
+| anyFloat roundEven(anyFloat x)                               | 返回最接近x的整数的值。如果是小数部分为0.5则取最接近的偶数   |
+| anyFloat ceil(anyFloat x)                                    | 返回大于x的最接近它的整数值                                  |
+| anyFloat fract(anyFloat x)                                   | 返回x的小数部分                                              |
+| anyFloat mod(anyFloat x,float y)                             | 返回x对y取余得到的模数                                       |
+| anyFloat mod(anyFloat x,anyFloat y)                          |                                                              |
+| anyFloat mod(anyFloat x,out anyFloat l)                      | 返回x的小数部分，并将l设为余下的整数部分的值                 |
+| anyFloat min(anyFloat x,anyFloat y)                          | 返回x和y中较小的一个                                         |
+| anyFloat min(anyFloat x,anyInt y)                            |                                                              |
+| anyInt min(anyInt x,anyInt y)                                |                                                              |
+| anyInt min(anyInt x,int y)                                   |                                                              |
+| anyUInt min(anyUInt x,anyUInt y)                             |                                                              |
+| anyUint min(anyUInt x,uint y)                                |                                                              |
+| anyFloat max(anyFloat x,anyFloat y)                          | 返回x和y中较大的一个                                         |
+| anyFloat max (anyFloat x,anyInt y)                           |                                                              |
+| anyInt max (anyInt x,anyInt y)                               |                                                              |
+| anyInt max (anyInt x,int y)                                  |                                                              |
+| anyUInt max (anyUInt x,anyUInt y)                            |                                                              |
+| anyUint max (anyUInt x,uint y)                               |                                                              |
+| anyFLoat clamp(anyFLoat x,anyFLoat minVal,anyFLoat maxVal)   | 获得三个参数中的中间值，首先获取x和minVal中较大的值，然后再拿较大值和maxVal进行比较后获取较小的值，minVal必须小于maxVal，即返回介于 minVal 和 maxVal 区间的值 |
+| anyFLoat clamp(anyFLoat x,float minVal,float maxVal)         |                                                              |
+| anyFLoat clamp(anyInt x,anyInt minVal, anyInt maxVal)        |                                                              |
+| anyFLoat clamp(anyInt x,int minVal, int maxVal)              |                                                              |
+| anyFLoat clamp(anyUint x, anyUint minVal, anyUint maxVal)    |                                                              |
+| anyFLoat clamp(anyUint x, uint minVal, uint maxVal)          |                                                              |
+| anyFLoat mix(anyFLoat x,anyFloat y,anyFloat a)               | 返回x和y的线性混合，a从0到1变化                              |
+| anyFLoat mix(anyFLoat x,anyFloat y,float a)                  |                                                              |
+| anyFloat mix(anyFloat x,anyFLoat y,anyBool a)                | 在a为假时返回x的各个分量，而在a为真时返回y的各个分量         |
+| anyFLoat step(anyFloat edge,anyFloat x)                      | 如果x < edge则返回0.0，否则返回1.0                           |
+| anyFloat step(float edge,anyFloat x)                         |                                                              |
+| anyFloat smoothstep(anyFloat edge0,anyFLoat edge1,anyFloat x) | 如果x <= edge0 则返回0.0，x >= edge1则返回1.0，如果在两者之间则在0.0和1.0之间取一个平滑的Hermite插值 |
+| anyFloat smoothstep(anyFloat edge0,fLoat edge1,anyFloat x)   |                                                              |
+| anyBool isnan(anyFLoat x)                                    | Returns true ifxis Nan                                       |
+| anyBool isinf(anyFloat x)                                    | 如果x为正无穷大或负无穷大，则返回真                          |
+| anyInt floatBitsToInt(anyFLoat x)                            | 将一个浮点值转换成整数值                                     |
+| anyUint floatBitsToUint(anyFloat x)                          |                                                              |
+| anyFLoat intBitsToFloat(anyInt x)                            | 将一个整数值转换成浮点值                                     |
+| anyFLoat uintBitsToFloat(anyUint x)                          |                                                              |
