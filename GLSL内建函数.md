@@ -151,21 +151,21 @@
 | anyInt max (anyInt x,int y)                                  |                                                              |
 | anyUInt max (anyUInt x,anyUInt y)                            |                                                              |
 | anyUint max (anyUInt x,uint y)                               |                                                              |
-| anyFLoat clamp(anyFLoat x,anyFLoat minVal,anyFLoat maxVal)   | 获得三个参数中的中间值，首先获取x和minVal中较大的值，然后再拿较大值和maxVal进行比较后获取较小的值，minVal必须小于maxVal，即返回介于 minVal 和 maxVal 区间的值 |
-| anyFLoat clamp(anyFLoat x,float minVal,float maxVal)         |                                                              |
+| anyFLoat clamp(anyFLoat x, anyFLoat minVal, anyFLoat maxVal) | 获取三个参数中的中间值，首先获取x和minVal中较大的值，然后再拿较大值和maxVal进行比较后获取较小的值，minVal必须小于maxVal，即返回介于 minVal 和 maxVal 区间的值 |
+| anyFLoat clamp(anyFLoat x, float minVal, float maxVal)       |                                                              |
 | anyFLoat clamp(anyInt x,anyInt minVal, anyInt maxVal)        |                                                              |
 | anyFLoat clamp(anyInt x,int minVal, int maxVal)              |                                                              |
 | anyFLoat clamp(anyUint x, anyUint minVal, anyUint maxVal)    |                                                              |
 | anyFLoat clamp(anyUint x, uint minVal, uint maxVal)          |                                                              |
 | anyFLoat mix(anyFLoat x,anyFloat y,anyFloat a)               | 返回x和y的线性混合，a从0到1变化                              |
 | anyFLoat mix(anyFLoat x,anyFloat y,float a)                  |                                                              |
-| anyFloat mix(anyFloat x,anyFLoat y,anyBool a)                | 在a为假时返回x的各个分量，而在a为真时返回y的各个分量         |
+| anyFloat mix(anyFloat x,anyFLoat y,anyBool a)                | a为假时返回x的各个分量，而在a为真时返回y的各个分量           |
 | anyFLoat step(anyFloat edge,anyFloat x)                      | 如果x < edge则返回0.0，否则返回1.0                           |
 | anyFloat step(float edge,anyFloat x)                         |                                                              |
 | anyFloat smoothstep(anyFloat edge0,anyFLoat edge1,anyFloat x) | 如果x <= edge0 则返回0.0，x >= edge1则返回1.0，如果在两者之间则在0.0和1.0之间取一个平滑的Hermite插值 |
 | anyFloat smoothstep(anyFloat edge0,fLoat edge1,anyFloat x)   |                                                              |
-| anyBool isnan(anyFLoat x)                                    | Returns true ifxis Nan                                       |
-| anyBool isinf(anyFloat x)                                    | 如果x为正无穷大或负无穷大，则返回真                          |
+| anyBool isnan(anyFLoat x)                                    | Returns true if exist Nan                                    |
+| anyBool isinf(anyFloat x)                                    | 如果x为正无穷大或负无穷大，则返回true                        |
 | anyInt floatBitsToInt(anyFLoat x)                            | 将一个浮点值转换成整数值                                     |
 | anyUint floatBitsToUint(anyFloat x)                          |                                                              |
 | anyFLoat intBitsToFloat(anyInt x)                            | 将一个整数值转换成浮点值                                     |
