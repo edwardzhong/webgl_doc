@@ -1,5 +1,7 @@
 ## GLSL 300 es
 
+### GLSL 300 es的声明
+
 要使用GLSL 300 es，需要在着色器代码中显示的声明，声明版本代码如下：
 
 ```c
@@ -50,6 +52,8 @@ var vsSource = `#version 300 es
 
 GLSL 300 es 和GLSL 100 es 有一些不同的地方，以下会一一讲述这些差异的地方
 
+
+
 #### 使用in代替attribute
 
 在GLSL 100中，定义顶点数据的变量，使用attribute关键词，如下：
@@ -68,28 +72,32 @@ in vec2 aTexcoord;
 in vec3 aNormal;
 ```
 
+
+
 #### varying 被in/out替代
 
 在GLSL 100，在顶点着色器和片元着色器中，通过varying关键词来声明varying变量，代码如下：
 
 ```c
- varying vec2 vTexcoord;
- varying vec3 vNormal;
+varying vec2 vTexcoord;
+varying vec3 vNormal;
 ```
 
 而在GLSL 300 es中，顶点着色器中的varying变量用out声明，表示输出：
 
 ```c
- out vec2 vTexcoord;
- out vec3 vNormal;
+out vec2 vTexcoord;
+out vec3 vNormal;
 ```
 
 在片元着色器中的varying变量用in声明，表示输如：
 
-```c
- in vec2 vTexcoord;
- in vec3 vNormal;
+```CQL
+in vec2 vTexcoord;
+in vec3 vNormal;
 ```
+
+
 
 #### GLSL 300 es 中没有内置变量gl_FragColor
 
@@ -111,6 +119,8 @@ void main() {
 
 > 此处，输入变量名可以随意定义，不过不能使用gl_开通，因此你也不能这样定义 out vec4 gl_FragColor;
 
+
+
 #### 用texture代替 texture2D、textureCube
 
 在GLSL 100中，通过texture2D方法获取2D贴图的像素，textureCube方法获取立方体贴图的像素，代码如下：
@@ -125,9 +135,7 @@ void main(){
 }
 ```
 
-而在GLSL 300 es中，只需要使用texture方法即可，改方法会通过传入的贴图对象，自动判断，代码如下：
-
-
+而在GLSL 300 es中，只需要使用texture方法即可，该方法会通过传入的贴图对象，自动判断，代码如下：
 
 ```c
 uniform sampler2D uTexture;
@@ -246,9 +254,9 @@ glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
 */
 var MAX_UNSIGNED_SHORT = 65535;
 var num_vertices = 7;
- var indices = new Uint16Array([
-       0, 1, 2, MAX_UNSIGNED_SHORT, 2, 3, 1
-  ]);
+var indices = new Uint16Array([
+	0, 1, 2, MAX_UNSIGNED_SHORT, 2, 3, 1
+]);
 ```
 
 ## 不可变纹理
@@ -263,19 +271,15 @@ var num_vertices = 7;
 创建不可变纹理很简单，首先通过gl.bindTexture方法绑定纹理对象，然后通过调用gl. texStorage2D、texStorage3D指定纹理的大小和格式，来创建不可变的存储空间。代码如下：
 
 ```javascript
-  // -- Allocate storage for the texture
- gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, 512, 512);
- gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGB, gl.UNSIGNED_BYTE, image);
- gl.generateMipmap(gl.TEXTURE_2D);
+// -- Allocate storage for the texture
+gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, 512, 512);
+gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGB, gl.UNSIGNED_BYTE, image);
+gl.generateMipmap(gl.TEXTURE_2D);
 ```
 
 #### 不可变纹理可以优化性能
 
 在很多情况下，我们的纹理的尺寸和数据格式都是不需要改变的。使用不可变纹理，可以避免驱动程序对这些不需要改变的尺寸和数据格式的纹理对象进行一致性和内存大小的检查，因此可以获得更佳的性能。
-
-
-
-## 图元重启
 
 
 

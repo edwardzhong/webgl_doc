@@ -72,7 +72,7 @@
 | mat4X2 outerProduct(vec2 c,vec4 r) |                                                        |
 | mat3X4 outerProduct(vec4 c,vec3 r) |                                                        |
 | mat4X3 outerProduct(vec3 c,vec4 r) |                                                        |
-| mat2 transpose(mat2 m)             | 返回一个矩阵，这个矩阵是指定就很的转置矩阵             |
+| mat2 transpose(mat2 m)             | 返回一个矩阵，这个矩阵是指定就是转置矩阵               |
 | mat3 transpose(mat3 m)             |                                                        |
 | mat4 transpose(mat4 m)             |                                                        |
 | mat2X3 transpose(mat3X2 m)         |                                                        |
