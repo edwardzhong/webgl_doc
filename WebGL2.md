@@ -149,32 +149,59 @@ void main(){
 
 ## 顶点数组对象
 
-为一个 对象指定了一个VAO之后，可以通过对该VAO对象进行简单的绑定操作来导入对象的所有引用和状态。在之后绘制对象时候，不需要在手动来导入对象的引用和状态，VAO替你记住了它。
-通过VAO可以简化缓冲区的绑定过程，即可以减少代码的调用次数，也提升了WebGL状态切换的效率。
+顶点数组对象（ VAO ）是这样一种对象： 它封装了与顶点处理器有关的所有数据，它记录了顶点缓存区和索引缓冲区的引用，以及顶点的各种属性的布局而不是实际的数据。
+
+#### 顶点数组对象的优点
+
+一旦为一个 对象指定了一个VAO之后，可以通过对该VAO对象进行简单的绑定操作来导入对象的所有引用和状态。在之后绘制对象时候，不需要在手动来导入对象的引用和状态，VAO替你记住了它。
+通过VAO可以简化缓冲区的绑定过程，即可以减少代码的调用次数，也提升了WebGL状态切换的效率。使用VAO对象的好处：
 
 - 减少代码量，提高开发效率
-
 - 提高绘制效率（因为减少了WebGL相关函数的调用，并且WebGL内部对VAO进行了优化）
 
-顶点数组对象(Vertex Array Object)，在WebGL1中，是一个扩展对象OES_vertex_array_object，而在WebGL2直接使用。在WebGL1中，使用代码如下：
+#### WebGL1中如何使用VAO
 
-```javascript
+在WebGL1.0中VAO是通过扩展方式提供的，首先需要获取对应的扩展对象：
+
+```
 var ext = gl.getExtension("OES_vertex_array_object");
-if (!ext) {
-   // 告诉用户没有此扩展或者使用其他方式
-  // tell user they don't have the required extension or work around it
-} else {
-  var aVAO = ext.createVertexArrayOES();
-}
 ```
 
-而在WebGL2中，代码如下：
+如果返回的ext位null说明浏览器不支持该扩展。
+有了上面的ext对象，便可以创建VAO了：
+
+```
+var vao = ext.createVertexArrayOES();
+```
+
+有了VAO对象之后，就可以进行绑定操作：
+
+```
+// bind
+ext.bindVertexArrayOES(vao);
+// unbind
+ext.bindVertexArrayOES(null)
+```
+
+#### WebGL2中使用VAO
 
 ```javascript
-var aVAO = gl.createVertexArray();
+// 创建
+var triangleArray = gl.createVertexArray();
+gl.bindVertexArray(triangleArray);
+
+//绘制
+gl.clear(gl.COLOR_BUFFER_BIT);// 清空颜色缓冲区
+// 绘制第一个三角形
+gl.bindVertexArray(triangleArray);
+gl.drawArrays(gl.TRIANGLES, 0, 3);
+// 绘制第二个三角形
+gl.bindVertexArray(triangleArray2);
+gl.drawArrays(gl.TRIANGLES, 0, 3);
 ```
 
-实例
+#### 案例:用顶点数组对象绘制两个三角形
+
 ```javascript
 // VAO 创建
 var triangleArray = gl.createVertexArray();
@@ -238,13 +265,38 @@ gl.bindVertexArray(triangleArray2);
 gl.drawArrays(gl.TRIANGLES, 0, 3);
 ```
 
+
+
 ## 图元重启
+
+#### 启动图元重启功能
 
 在OPENGL中，可以通过以下方法启动图元重启功能：
 
-```javascript
+```
 glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
 ```
+
+而在WEBGL2中，图元重启功能默认是开启的，而且总是开启的，不能通过gl.enable和gl.disable方法来控制。
+参考WebGL2 文档：[https://www.khronos.org/regis...](https://www.khronos.org/registry/webgl/specs/latest/2.0/#NO_PRIMITIVE_RESTART_FIXED_INDEX)
+
+#### 图元重启标志
+
+之前提到了图元重启是在遇到特定的标志才重启的，那么这个标志应该是多少了，一般而言gl.drawElements方法的索引值的类型可以是以下几种：
+
+- gl.UNSIGNED_BYTE
+- gl.UNSIGNED_SHORT
+- gl.UNSIGNED_INT
+
+那么分别对应的重启的标志就是
+
+- 2^8 - 1
+- 2^16 - 1
+- 2^32 - 1
+
+也就是說重启的标志的数值就是indices数组所能允许的最大值。这个值一般来说是不会被用到的，拿来当标志正好。
+
+#### 代码片段
 
 下面的代码，在定义的indices数组中加入了图元重启标志：
 
@@ -257,6 +309,97 @@ var num_vertices = 7;
 var indices = new Uint16Array([
 	0, 1, 2, MAX_UNSIGNED_SHORT, 2, 3, 1
 ]);
+```
+
+
+
+## 实例化数组
+
+#### 实例化
+
+如果能够讲数据一次性发送给GPU，然后告诉WebGL使用一个绘制函数，绘制多个物体，就会更方便。这种技术，便是实例化技术。这种技术的实现思路，就是把原本的uniform变量，比如变换矩阵，变成attribute变量，然后把多个对象的矩阵数据，写在一起，然后创建所有矩阵的VBO对象（顶点缓存区）； 创建好缓冲区后，把所有对象的矩阵数据通过bufferData 上传到缓冲区中，这和普通的attribute变量的缓冲区没什么差别。
+接下来，就是和普通的VBO差异的部分：该缓冲区可以在多个对象之间共享。每个对象 取该缓冲区的一部分数据，作为attribute变量的值，方法如下:
+
+```
+gl.vertexAttribDivisor(index, divisor)
+```
+
+通过gl.vertexAttribDivisor方法指定缓冲区中的每一个值，用于多少个对象，比如divisor = 1，表示每一个值用于一个对象；如果divisor=2，表示一个值用于两个对象。 index表示的attribute变量的地址。
+
+然后，通过调用如下方法进行绘制：
+
+```
+gl.drawArraysInstanced(mode, first, count, instanceCount);
+gl.drawElementsInstanced(mode, count, type, offset, instanceCount);
+```
+
+这两个方法和 gl.drawArrays与gl.drawElements类似，不同的是多了第四个参数 instanceCount，表示一次绘制多少个对象。
+通过这个方法，便能实现一次调用绘制多个对象的目标。
+
+### 代码展示
+
+本案例 将一次绘制多个四边形，代码如下：
+
+```javascript
+ var count = 3000;
+ var positions = new Float32Array([
+     -1/count, 1/count, 0.0,
+     -1/count, -1/count, 0.0,
+     1/count, 1/count, 0.0,
+     1/count, -1/count, 0.0
+ ]);
+ var positionBuffer = gl.createBuffer();
+ gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+ gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+ gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 0, 0);
+ gl.enableVertexAttribArray(0);
+
+ var colors = new Float32Array([
+     1.0, 0.0, 0.0,
+     0.0, 1.0, 0.0,
+     0.0, 0.0, 1.0,
+     1.0, 1.0, 1.0
+ ]);
+ var colorBuffer = gl.createBuffer();
+ gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+ gl.bufferData(gl.ARRAY_BUFFER, colors, gl.STATIC_DRAW);
+ gl.vertexAttribPointer(1, 3, gl.FLOAT, false, 0, 0);
+ gl.enableVertexAttribArray(1);
+
+var indices = new Uint8Array([
+    0,1,2,
+    2,1,3
+]);
+var indexBuffer = gl.createBuffer();
+gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,indexBuffer);
+gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,indices,gl.STATIC_DRAW); //给缓冲区填充数据
+
+var offsetArray = [];
+for(var i = 0;i < count;i ++){
+    for(var j = 0; j < count; j ++){
+        var x = ((i + 1) - count/2) / count * 4;
+        var y = ((j + 1) - count/2) / count * 4;
+        var z = 0;
+        offsetArray.push(x,y,z);
+		}
+}
+
+var offsets = new Float32Array(offsetArray)
+var offsetBuffer = gl.createBuffer();
+var aOffsetLocation = 2;
+gl.bindBuffer(gl.ARRAY_BUFFER, offsetBuffer);
+gl.bufferData(gl.ARRAY_BUFFER, offsets, gl.STATIC_DRAW);
+gl.enableVertexAttribArray(aOffsetLocation);
+gl.vertexAttribPointer(aOffsetLocation, 3, gl.FLOAT, false, 12, 0);
+gl.vertexAttribDivisor(aOffsetLocation, 1);
+
+// ////////////////
+// DRAW
+// ////////////////
+gl.clear(gl.COLOR_BUFFER_BIT);// 清空颜色缓冲区
+// // 绘制第一个三角形
+gl.bindVertexArray(triangleArray);
+gl.drawElementsInstanced(gl.TRIANGLES,indices.length,gl.UNSIGNED_BYTE,0,count * count);
 ```
 
 ## 不可变纹理
@@ -276,6 +419,36 @@ gl.texStorage2D(gl.TEXTURE_2D, 1, gl.RGB8, 512, 512);
 gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gl.RGB, gl.UNSIGNED_BYTE, image);
 gl.generateMipmap(gl.TEXTURE_2D);
 ```
+
+#### void gl.texStorage2D(target, levels, internalformat, width, height);
+
+设置纹理格式和尺寸
+
+#### void gl.texSubImage2D(target, level, xoffset, yoffset, format, type, pixels);
+
+加载纹理
+
+gl.texSubImage2D 在 WebGL2.0 与 WebGL1.0 同名函数区别
+
+```
+// WebGL 1:
+void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, ArrayBufferView? pixels);
+void gl.texSubImage2D(target, level, xoffset, yoffset, format, type, ImageData? pixels);
+void gl.texSubImage2D(target, level, xoffset, yoffset, format, type, HTMLImageElement? pixels);
+void gl.texSubImage2D(target, level, xoffset, yoffset, format, type, HTMLCanvasElement? pixels);
+void gl.texSubImage2D(target, level, xoffset, yoffset, format, type, HTMLVideoElement? pixels);
+void gl.texSubImage2D(target, level, xoffset, yoffset, format, type, ImageBitmap? pixels);
+
+// WebGL 2:
+void gl.texSubImage2D(target, level, xoffset, yoffset, format, type, GLintptr offset);
+void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, HTMLCanvasElement source);
+void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, HTMLImageElement source);
+void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, HTMLVideoElement source); 
+void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, ImageBitmap source); 
+void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, ImageData source);
+void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, ArrayBufferView srcData, srcOffset);
+```
+
 
 #### 不可变纹理可以优化性能
 
