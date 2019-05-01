@@ -43,16 +43,16 @@
 
 几何函数
 
-| **函数**                              | **描述**                                                  |
-| ------------------------------------- | --------------------------------------------------------- |
-| float length(vec2/vec3/vec4 x)        | 返回x向量的长度                                           |
-| float distance(vec p0,vec p1)         | 返回p0和p1之间的距离                                      |
-| float dot(vec x,vec y)                | 返回x和y的点乘结果                                        |
-| vec3 cross(vec3 x,vec3 y)             | 返回x和y的叉乘结果                                        |
-| vec normalize(vec x)                  | 返回和x方向相同的单位长度向量                             |
-| vec faceforward(vec N,vec I,vec nRef) | 如果dot(Nref,l)<0则返回N，否则返回-N                      |
-| vec reflect(vec l,vec N)              | 返回反射向量，参数：入射向量l，表面法向量N                |
-| vec refract(vec l,vec N,float eta)    | 返回折射向量，参数：入射向量l，表面法向量N和折射指数比eta |
+| **函数**                              | **描述**                                                     |
+| ------------------------------------- | ------------------------------------------------------------ |
+| float length(vec2/vec3/vec4 x)        | 返回x向量的长度, √ x0•x0 +x1•x1+…                            |
+| float distance(vec p0,vec p1)         | 返回p0和p1之间的距离, length(p0 - p1)                        |
+| float dot(vec x,vec y)                | 返回x和y的点乘结果 a•b=\|a\|\|b\|cosø，向量的余弦值(夹角)    |
+| vec3 cross(vec3 x,vec3 y)             | 返回x和y的叉乘结果 axb=\|a\|\|b\|sinø, 已知物体表面的两个非平行矢量（或者不在同一直线的三个点），就可依靠叉积求得法线 |
+| vec normalize(vec x)                  | 返回和x方向相同的单位长度向量                                |
+| vec faceforward(vec N,vec I,vec nRef) | 如果dot(Nref,l)<0则返回N，否则返回-N                         |
+| vec reflect(vec l,vec N)              | 返回反射向量，参数：入射向量l，表面法向量N                   |
+| vec refract(vec l,vec N,float eta)    | 返回折射向量，参数：入射向量l，表面法向量N和折射指数比eta    |
 
 ### 矩阵函数
 
@@ -128,7 +128,7 @@
 | :----------------------------------------------------------- | ------------------------------------------------------------ |
 | anyFloat abs(anyFLoat x)                                     | 返回x的绝对值                                                |
 | anyInt abs(anyInt x)                                         |                                                              |
-| anyFLoat sign(anyFloat x)                                    | 返回1.0或-1.0，取决于x                                       |
+| anyFLoat sign(anyFloat x)                                    | x> 0.0 返回1.0，x == 0.0 返回 0.0，x<0 返回 -1.0             |
 | anyInt sign(anyInt x)                                        |                                                              |
 | anyFloat floor(anyFLoat x)                                   | 返回不大于x的最小整数                                        |
 | anyFloat trunc(anyFloat x)                                   | 返回不大于x的最接近的整数                                    |
@@ -170,3 +170,29 @@
 | anyUint floatBitsToUint(anyFloat x)                          |                                                              |
 | anyFLoat intBitsToFloat(anyInt x)                            | 将一个整数值转换成浮点值                                     |
 | anyFLoat uintBitsToFloat(anyUint x)                          |                                                              |
+| dFdx(p)                                                      | p在x方向上的偏导数                                           |
+| dFdy(p)                                                      | p在y方向上的偏导数                                           |
+| fwidth(p)                                                    | p在x和y方向上的偏导数的绝对值之和                            |
+
+#### dFdx, dFdy 和 fwidth
+
+vec3 var = gl_TexCoord[0].xyz;
+
+dFdx的参数如果是uniform变量, dFdx dFdy返回值始终为0. 值不会变的变量就会返回0值 
+直观地说，dFdx(var.x) 就是当屏幕坐标x改变1时, 当前var各个分量 x y z会变化多少. 
+dFdx(var.xyz) 同理
+
+**这两个函数的意义** 
+假设我们画一个矩形R,总共有4个顶点,那么顶点着色器会进行4次, gl_TexCoord[0]在顶点着色器会有4个值 
+假设矩形R映射到屏幕上总共有16个像素(一行4个),  片元着色器被调用16次 
+gl_TexCoord[0] 会有16个取值,在片元着色器中被插值 
+dFdx(gl_TexCoord[0].xyz) 表示每个像素点之间x y z 分量的差异,类似于求导
+
+width的效果相当于以下
+
+```c
+w = fwidth(uv); 	
+// 同上
+w.x = abs(dFdx(uv).x);
+w.y = abs(dFdy(uv).y);
+```

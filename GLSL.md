@@ -251,11 +251,12 @@ GL_FRAGEMENT_PRECISION_HIGH/片元着色器支持highp精度
 
  片段着色器
 
-| 名称          | 类型  | 描述                                     |
-| ------------- | ----- | ---------------------------------------- |
-| gl_Color      | vec4  | 插值后的主颜色，只读                     |
-| gl_TexCoord   | vec4  | 插值后的纹理坐标，只读                   |
-| gl_FragColor  | vec4  | 输出的颜色                               |
-| gl_FragCoord  | vec4  | 片元在窗口的坐标位置：x, y, z, 1/w，只读 |
-| gl_FragDepth  | float | 片段深度值，只写输出                     |
-| gl_PointCoord | vec4  | 点的纹理坐标- 只读                       |
+| 名称           | 类型  | 描述                                     |
+| -------------- | ----- | ---------------------------------------- |
+| gl_Color       | vec4  | 插值后的主颜色，只读                     |
+| gl_TexCoord    | vec4  | 插值后的纹理坐标，只读                   |
+| gl_FragColor   | vec4  | 输出的颜色                               |
+| gl_FragCoord   | vec4  | 片元在窗口的坐标位置：x, y, z, 1/w，只读 |
+| gl_FragDepth   | float | 片段深度值，只写输出                     |
+| gl_PointCoord  | vec4  | 点的纹理坐标- 只读                       |
+| gl_FrontFacing | bool  | 是否为正面                               |
