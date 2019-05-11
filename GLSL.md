@@ -240,23 +240,22 @@ GL_FRAGEMENT_PRECISION_HIGH/片元着色器支持highp精度
 
 | 名称         | 类型  | 描述                                              |
 | ------------ | ----- | ------------------------------------------------- |
-| gl_Color     | vec4  | 输入属性-表示顶点的主颜色                         |
-| gl_Normal    | vec3  | 输入属性-表示顶点的法线值                         |
-| gl_Vertex    | vec4  | 输入属性-表示顶点位置                             |
-| gl_PointSize | float | 输入属性-点的大小                                 |
-| gl_Position  | vec4  | 输出属性-变换后的顶点位置，顶点着色器必须写这个值 |
-| gl_TexCoord  | vec4  | varying输出-纹理坐标的数组                        |
+| gl_Color     | vec4  | 输入变量-表示顶点的主颜色                         |
+| gl_Normal    | vec3  | 输入变量-表示顶点的法线值                         |
+| gl_Vertex    | vec4  | 输入变量-表示顶点位置                             |
+| gl_PointSize | float | 输入变量-点的大小                                 |
+| gl_Position  | vec4  | 输出变量-变换后的顶点位置，顶点着色器必须写这个值 |
 
 ​    
 
  片段着色器
 
-| 名称           | 类型  | 描述                                     |
-| -------------- | ----- | ---------------------------------------- |
-| gl_Color       | vec4  | 插值后的主颜色，只读                     |
-| gl_TexCoord    | vec4  | 插值后的纹理坐标，只读                   |
-| gl_FragColor   | vec4  | 输出的颜色                               |
-| gl_FragCoord   | vec4  | 片元在窗口的坐标位置：x, y, z, 1/w，只读 |
-| gl_FragDepth   | float | 片段深度值，只写输出                     |
-| gl_PointCoord  | vec4  | 点的纹理坐标- 只读                       |
-| gl_FrontFacing | bool  | 是否为正面                               |
+| 名称           | 类型  | 描述                                                         |
+| -------------- | ----- | ------------------------------------------------------------ |
+| gl_Color       | vec4  | 插值后的主颜色，只读                                         |
+| gl_TexCoord    | vec4  | 插值后的纹理坐标，只读                                       |
+| gl_FragColor   | vec4  | 输出的颜色                                                   |
+| gl_FragCoord   | vec4  | 片元在窗口的坐标位置：x, y, z, 1/w，只读, x和y是片段的窗口空间坐标，原点为窗口的左下角, z为深度值 |
+| gl_FragDepth   | float | 输出变量-片段深度值，可设置片段的深度值，如果着色器没有写入值到gl_FragDepth，它会自动取用`gl_FragCoord.z`的值 |
+| gl_PointCoord  | vec4  | 点的纹理坐标- 只读                                           |
+| gl_FrontFacing | bool  | 是否为正面                                                   |
