@@ -176,11 +176,10 @@
 
 #### dFdx, dFdy 和 fwidth
 
-vec3 var = gl_TexCoord[0].xyz;
+vec3 point = gl_TexCoord[0].xyz;
 
 dFdx的参数如果是uniform变量, dFdx dFdy返回值始终为0. 值不会变的变量就会返回0值 
-直观地说，dFdx(var.x) 就是当屏幕坐标x改变1时, 当前var各个分量 x y z会变化多少. 
-dFdx(var.xyz) 同理
+dFdx(point.x) 就是当屏幕坐标x改变1时, 当前point各个分量 x y z会变化多少，dFdx(point.xyz) 同理
 
 **这两个函数的意义** 
 假设我们画一个矩形R,总共有4个顶点,那么顶点着色器会进行4次, gl_TexCoord[0]在顶点着色器会有4个值 
