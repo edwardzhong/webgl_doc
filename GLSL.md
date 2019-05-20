@@ -195,8 +195,8 @@ precision mediump float;
 #endif
 
 //预定义的内置宏有，宏/描述
-GL_ES/在OpenGL ES2.0中定义为1
-GL_FRAGEMENT_PRECISION_HIGH/片元着色器支持highp精度
+GL_ES//在OpenGL ES2.0中定义为1
+GL_FRAGEMENT_PRECISION_HIGH//片元着色器支持highp精度
 ```
 
 ### GLSL默认值 
