@@ -417,7 +417,6 @@ struct Light {
     vec4 Color;
 };
 uniform Light lights[4];
-
 ```
 
 找到每个数组结构体属性

@@ -151,7 +151,7 @@
 | anyInt max (anyInt x,int y)                                  |                                                              |
 | anyUInt max (anyUInt x,anyUInt y)                            |                                                              |
 | anyUint max (anyUInt x,uint y)                               |                                                              |
-| anyFLoat clamp(anyFLoat x, anyFLoat minVal, anyFLoat maxVal) | 获取三个参数中的中间值，首先获取x和minVal中较大的值，然后再拿较大值和maxVal进行比较后获取较小的值，minVal必须小于maxVal，即返回介于 minVal 和 maxVal 区间的值 |
+| anyFLoat clamp(anyFLoat x, anyFLoat minVal, anyFLoat maxVal) | 获取三个参数中的中间值，即返回介于 minVal 和 maxVal 区间的值 |
 | anyFLoat clamp(anyFLoat x, float minVal, float maxVal)       |                                                              |
 | anyFLoat clamp(anyInt x,anyInt minVal, anyInt maxVal)        |                                                              |
 | anyFLoat clamp(anyInt x,int minVal, int maxVal)              |                                                              |
@@ -160,9 +160,9 @@
 | anyFLoat mix(anyFLoat x,anyFloat y,anyFloat a)               | 返回x和y的线性混合，a从0到1变化                              |
 | anyFLoat mix(anyFLoat x,anyFloat y,float a)                  |                                                              |
 | anyFloat mix(anyFloat x,anyFLoat y,anyBool a)                | a为假时返回x的各个分量，而在a为真时返回y的各个分量           |
-| anyFLoat step(anyFloat edge,anyFloat x)                      | 如果x < edge则返回0.0，否则返回1.0                           |
+| anyFLoat step(anyFloat edge,anyFloat x)                      | 对小于阈值的值，返回 `0.0`，大于阈值，则返回 `1.0` ( x < edge 则返回0.0，否则返回1.0,) |
 | anyFloat step(float edge,anyFloat x)                         |                                                              |
-| anyFloat smoothstep(anyFloat edge0,anyFLoat edge1,anyFloat x) | 如果x <= edge0 则返回0.0，x >= edge1则返回1.0，如果在两者之间则在0.0和1.0之间取一个平滑的Hermite插值 |
+| anyFloat smoothstep(anyFloat edge0,anyFLoat edge1,anyFloat x) | 给定一个范围的上下限和一个数值，这个函数会在已有的范围内给出插值 (x <= edge0 则返回0.0，x >= edge1则返回1.0，在两者之间则在0.0和1.0之间取一个平滑插值) |
 | anyFloat smoothstep(anyFloat edge0,fLoat edge1,anyFloat x)   |                                                              |
 | anyBool isnan(anyFLoat x)                                    | Returns true if exist Nan                                    |
 | anyBool isinf(anyFloat x)                                    | 如果x为正无穷大或负无穷大，则返回true                        |
@@ -194,4 +194,12 @@ w = fwidth(uv);
 // 同上
 w.x = abs(dFdx(uv).x);
 w.y = abs(dFdy(uv).y);
+```
+
+##### 面的法线向量计算(flat shader)
+
+偏导数函数可以用来在片元着色器中计算当前面（三角形）的法线向量。当前片元的世界坐标系的水平偏导数和垂直偏导数是两个三角形表面上的两个向量，它们的叉乘结果是一个垂直于表面的向量，该向量的归一化结果就是面的法线向量。需要特别注意的是两个向量的叉乘的顺序。下面是GLSL中通过镜头坐标系中坐标计算面法线向量的代码：
+
+```
+normalize(  cross(dFdx(pos),  dFdy(pos))  );
 ```

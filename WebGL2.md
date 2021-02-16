@@ -147,6 +147,41 @@ void main(){
 }
 ```
 
+### 着色器中可以获取纹理大小
+
+在WebGL1中，如果你的着色器需要知道纹理的大小，你需要手动用uniform传递纹理大小。在WebGL2中你可以调用
+
+```glsl
+//lod: 纹理级别
+vec2 size = textureSize(sampler2D sampler, int lod)
+```
+
+### 直接选取纹素
+
+在纹理中很方便存储大量数组数据。WebGL 1中你可以这么做，但是你得用纹理坐标(0.0 到 1.0)来寻址。在WebGL2中，你可以在纹理中直接用像素／纹素坐标来选取值，使得数据获取简单一些。
+
+```glsl
+vec4 values = texelFetch(sampler2D sampler, ivec2 position, int lod);
+```
+
+### 移除着色器循环限制
+
+WebGL1中，着色器中的循环必须使用常量整数表达式。 WebGL2移除了这个限制(GLSL 300 es)
+WebGL1
+
+```glsl
+for(float i = 1.0; i <= 80.0; i++)
+```
+
+WebGL2 可以使用变量
+
+```glsl
+uniform float num;
+for(float i = 1.0; i <= num; i++)
+```
+
+
+
 ## 顶点数组对象
 
 顶点数组对象（ VAO ）是这样一种对象： 它封装了与顶点处理器有关的所有数据，它记录了顶点缓存区和索引缓冲区的引用，以及顶点的各种属性的布局而不是实际的数据。
@@ -404,10 +439,10 @@ gl.drawElementsInstanced(gl.TRIANGLES,indices.length,gl.UNSIGNED_BYTE,0,count * 
 
 ## 不可变纹理
 
-使用不可变纹理，可以减少上文中提到的因检查而导致的性能开销。 不可变纹理指的是纹理的一种分配方式，而不是值纹理的内容。
-不可变纹理的思路是：在给纹理加载纹理数据之前，先指定纹理的格式和大小，显卡驱动程序可以提前进行一致性、内存的检查，一旦指定了纹理的格式和大小之后，纹理的格式和尺寸就不能更改，但是可以通过gl.texSubImage2D、texSubImage3D（注意不能用gl.txtImage2D）等方法来加载纹理的数据，同时还可以使用such as render-to-texture, mipmap generation等方式加载纹理数据。
+在很多情况下，我们的纹理的尺寸和数据格式都是不需要改变的。使用不可变纹理，可以避免驱动程序对这些不需要改变的尺寸和数据格式的纹理对象进行一致性和内存大小的检查，因此可以获得更佳的性能。 不可变纹理指的是纹理的一种分配方式，而不是值纹理的内容。
+不可变纹理的思路是：在给纹理加载纹理数据之前，先指定纹理的格式和大小，显卡驱动程序可以提前进行一致性、内存的检查，一旦指定了纹理的格式和大小之后，纹理的格式和尺寸就不能更改，但是可以通过gl.texSubImage2D、texSubImage3D（注意不能用gl.txtImage2D）等方法来加载纹理的数据，同时还可以使用 render-to-texture, mipmap generation等方式加载纹理数据。
 
-> texSubImage3D(以及后面提到的texStorage3D)方法与3D纹理有关，后续相关文章会介绍。
+> texSubImage3D(以及后面提到的texStorage3D)方法与3D纹理有关。
 
 #### 创建不可变纹理
 
@@ -450,14 +485,9 @@ void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, ty
 ```
 
 
-#### 不可变纹理可以优化性能
-
-在很多情况下，我们的纹理的尺寸和数据格式都是不需要改变的。使用不可变纹理，可以避免驱动程序对这些不需要改变的尺寸和数据格式的纹理对象进行一致性和内存大小的检查，因此可以获得更佳的性能。
-
-
 
 ## 变换反馈
 
 允许将顶点着色器的输出捕捉到缓冲区对象。输出缓冲区可以作为后续绘图调用中顶点数据来源。粒子动画或渲染到顶点的缓冲区的物理模型非常有用。
 
-glTransformFeedbackVaryings(program, count,varying,bufferMode);
+glTransformFeedbackVaryings(program, count,varying,bufferMode);1
