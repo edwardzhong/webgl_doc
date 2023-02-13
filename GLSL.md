@@ -1,26 +1,25 @@
 ## WebGL 着色器语言（GLSL ES）
+
 ### GLSE中的数据类型
 
 必须注意的是，如果WebGL需要的参数是浮点类型，例如10.0。如果传递10会报错，因为10被认为是整数。
 
-
-
 ### 类型化数组
 
-| 数组类型     | 每个元素所占字节数 | 描述                             |
-| ------------ | ------------------ | -------------------------------- |
-| Int8Array    | 1                  | 8位整形数(signed char)           |
-| UInt8Array   | 1                  | 8位无符号整形数(unsigned char)   |
-| Int16        | 2                  | 16位整形数（signed short）       |
-| UInt16Array  | 2                  | 16位无符号整形数(unsigned short) |
-| Int32Array   | 4                  | 32位整形数（signed int）         |
-| UInt32Array  | 4                  | 32位无符号整形数(unsigned int)   |
-| Float32Array | 4                  | 单精度32位浮点数（float）        |
-| Float64Array | 8                  | 双精度64位浮点数（double）       |
+| 数组类型         | 每个元素所占字节数 | 描述                        |
+| ------------ | --------- | ------------------------- |
+| Int8Array    | 1         | 8位整形数(signed char)        |
+| UInt8Array   | 1         | 8位无符号整形数(unsigned char)   |
+| Int16        | 2         | 16位整形数（signed short）      |
+| UInt16Array  | 2         | 16位无符号整形数(unsigned short) |
+| Int32Array   | 4         | 32位整形数（signed int）        |
+| UInt32Array  | 4         | 32位无符号整形数(unsigned int)   |
+| Float32Array | 4         | 单精度32位浮点数（float）          |
+| Float64Array | 8         | 双精度64位浮点数（double）         |
 
 #### 类型化数组的方法、属性和常量
 
-```c
+```glsl
 get(index)//获取第index个元素值
 set(index, value)//设置第index个元素的值为value
 set(array, offset)//从第offset个元素开始将数组array中的值填充进去
@@ -29,40 +28,38 @@ length//数组长度
 BYTES_PER_ELEMENT//数组中每个元素所占字节数
 ```
 
-
-
 ### 类型转换内置函数
 
-| 转换            | 函数        | 描述                                                        |
-| --------------- | ----------- | ----------------------------------------------------------- |
+| 转换           | 函数          | 描述                               |
+| ------------ | ----------- | -------------------------------- |
 | float转换为int  | int(float)  | 将浮点数的小数部分删去，转换为整形数（比如，将3.14转换为3） |
-| bool转换为int   | int(bool)   | true被转换为1，false被转换为0                               |
-| int转换为float  | float(int)  | 将整形数转换为浮点数（比如，将8转换为8.0）                  |
-| bool转换为float | float(bool) | true被转换为1.0，false被转换为0.0                           |
-| int转换为bool   | bool(int)   | 0被转换为false，其他非0倍转换为true                         |
-| float转换为bool | bool(float) | 0.0被转换为false，其他非0值被转换为true                     |
+| bool转换为int   | int(bool)   | true被转换为1，false被转换为0             |
+| int转换为float  | float(int)  | 将整形数转换为浮点数（比如，将8转换为8.0）          |
+| bool转换为float | float(bool) | true被转换为1.0，false被转换为0.0         |
+| int转换为bool   | bool(int)   | 0被转换为false，其他非0倍转换为true          |
+| float转换为bool | bool(float) | 0.0被转换为false，其他非0值被转换为true       |
 
 ### 矢量和矩阵类型
 
-| 类型 | GLSL ES 数据类型          | 描述                                                 |
-| ---- | ------------------------- | ---------------------------------------------------- |
-| 矢量 | float、vec2、vec3、vec4   | 具有1、2、3、4个浮点数元素的矢量                     |
-| 矢量 | int、ivec2、ivec3、ivec4  | 具有1、2、3、4个整形数元素的矢量                     |
-| 矢量 | uint、uvec2、uvec2、uvec4 | 具有1、2、3、4个无符号整形数元素的矢量               |
-| 矢量 | bool、bvec2、bvec3、bvec4 | 具有1、2、3、4个布尔值元素的矢量                     |
-| 矩阵 | mat2、mat3、mat4          | 2\*2、3\*3、4\*4的浮点数元素的矩阵（4、9、16个元素） |
+| 类型  | GLSL ES 数据类型           | 描述                                 |
+| --- | ---------------------- | ---------------------------------- |
+| 矢量  | float、vec2、vec3、vec4   | 具有1、2、3、4个浮点数元素的矢量                 |
+| 矢量  | int、ivec2、ivec3、ivec4  | 具有1、2、3、4个整形数元素的矢量                 |
+| 矢量  | uint、uvec2、uvec2、uvec4 | 具有1、2、3、4个无符号整形数元素的矢量              |
+| 矢量  | bool、bvec2、bvec3、bvec4 | 具有1、2、3、4个布尔值元素的矢量                 |
+| 矩阵  | mat2、mat3、mat4         | 2\*2、3\*3、4\*4的浮点数元素的矩阵（4、9、16个元素） |
 
 #### 分量名
 
-| 类别       | 描述             |
-| ---------- | ---------------- |
+| 类别      | 描述       |
+| ------- | -------- |
 | x、y、z、w | 获取顶点坐标分量 |
-| r、g、b、a | 获取颜色分量     |
+| r、g、b、a | 获取颜色分量   |
 | s、t、p、q | 获取纹理坐标分量 |
 
 由于矢量可用来存储顶点的坐标、颜色、纹理坐标，所以GLSL ES支持以上三种分量名称以增强程序的可读性。事实上，任何矢量的x、r或s分量都会返回第一个分量，y、g、t分量都返回第二个分量，等等。比如：
 
-```c
+```glsl
 vec3 v3 = vec3(1.0, 2.0, 3.0) //将v3设置为（1.0, 2.0, 3.0）
 float f;
 f = v3.x; //设置f为1.0
@@ -76,7 +73,7 @@ f = v3.s; //设置f为1.0
 将多个分量名共同置于点运算符后，就可以从矢量中同时抽取出多个分量。这个过程称为混合（swizzing）。
 下面的例子中，我们使用了x、y、z和w，其他的集合也有相同的效果：
 
-```c
+```glsl
 vec2 v2;
 v2 = v3.xy; //设v2为(1.0, 2.0)
 v2 = v3.yz; //设v2位(2.0, 3.0) 可以省略任意分量
@@ -90,13 +87,11 @@ v3a = v3.zyx; //设v3a位(3.0, 2.0, 1.0)，可以使用所有分量
 //多个分量名必须属于同一集合，比如不能使用v3.was
 ```
 
-
-
 #### [ ] 运算符
 
 矩阵中的元素任然是按照列主序读取的。与在javascript中一样，下表从0开始，所以通过[0]可以访问到矩阵中的第一列元素，[1]可以访问到第二列元素，[2]可以访问到第三列元素，连续两个[]运算符可以访问某列的某个元素：
 
-```c
+```glsl
 float m23 = m4[1][2]; //将 m23 设置为 m4 第二列中的第三个元素(7.0）
 ```
 
@@ -104,20 +99,20 @@ float m23 = m4[1][2]; //将 m23 设置为 m4 第二列中的第三个元素(7.0�
 
 GLSL ES只支持一维数组，而且数组对象不支持pop()和push()等操作，创建数组时也不需要使用new运算符。声明方式如下：
 
-```c
+```glsl
 float floatArray[4]; // 声明含有4个浮点数元素的数组
 vec4 vec4Array[2]; // 声明含有两个vec4对象的数组
 ```
+
 数组的长度必须是大于0的整形常量表达式，如下定义：
+
 1. 整形字面量（0、1）
 2. 用const限定字修饰的全局变量或局部变量，不包含函数参数，因此下面的代码将会出错：
 
-```c
+```glsl
 int size = 4;
 vec4 vec4Array[size]; //错误。如果第一行为const int size = 4;则不会报错
 ```
-
-
 
 ### 存储限定字
 
@@ -125,25 +120,25 @@ vec4 vec4Array[size]; //错误。如果第一行为const int size = 4;则不会�
 
 本质上，着色器在任何顶点或片元中都应该以统一变量uinform的形式传入
 
-| 类型      | 描述 |
-| --------- | ---- |
-| Attribute | attribute变量只能出现在顶点着色器中，被用来表示逐顶点的信息，它是只读的。通常存储位置，法线，纹理坐标，颜色。最大属性数量由gl_MaxVertexAttribs给出。 |
-| uniform   | 统一变量，命名空间在顶点和片元着色器中是共享的。它是只读的，可以是除了数组或结构体之外的任意类型。如果顶点着色器和片元着色器中声明了同名的uniform变量，那么两个声明必须匹配。 |
-| varying  | 顶点着色器输出变量，从顶点着色器向片元着色器传输数据用，传输到片元着色器后的输出变量值都是在光栅化阶段中经过插值处理的。必须在两种着色器中声明同名、同类型的varying变量。它的类型只能是以下类型：float、vec2、vec3、vec4、mat2、 mat 3、mat4。 |
-
-
+| 类型        | 描述                                                                                                                                         |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Attribute | attribute变量只能出现在顶点着色器中，被用来表示逐顶点的信息，它是只读的。通常存储位置，法线，纹理坐标，颜色。最大属性数量由gl_MaxVertexAttribs给出。                                                   |
+| uniform   | 统一变量，命名空间在顶点和片元着色器中是共享的。它是只读的，可以是除了数组或结构体之外的任意类型。如果顶点着色器和片元着色器中声明了同名的uniform变量，那么两个声明必须匹配。                                                 |
+| varying   | 顶点着色器输出变量，从顶点着色器向片元着色器传输数据用，传输到片元着色器后的输出变量值都是在光栅化阶段中经过插值处理的。必须在两种着色器中声明同名、同类型的varying变量。它的类型只能是以下类型：float、vec2、vec3、vec4、mat2、 mat 3、mat4。 |
 
 ### 精度限定字
 
 GLSL ES新引入了精度限定字，目的是帮助着色器程序提高运行效率，消减内存开支。使用精度限定字，你就能够精细地控制程序在效果和性能间的平衡。然而，精度限定字是可选的，如果你不确定，可以使用下面这个适中的默认值：
 
-```c
+```glsl
 #ifdef GL_ES
   precision mediump float;
 #endif
 ```
+
  如下所示，WebGL程序支持三种精度，其限定字分别为highp、mediump、lowp。
-```c
+
+```glsl
 mediump float size; //中精度的浮点型变量
 highp vec4 position; //具有高精度浮点型元素的vec4对象
 lowp vec4 color; //具有低精度浮点型元素的vec4对象
@@ -152,15 +147,14 @@ lowp vec4 color; //具有低精度浮点型元素的vec4对象
 
 precision mediump float;
 ```
+
 我们已经发使用精度限定字一般都只在片元着色器中使用，这是因为，除了片元着色器的float类型没有默认精度，其他类型都有默认精度。
-
-
 
 ### 预处理指令
 
 GLSL ES支持预处理指令。预处理指令用来在真正编译之前对代码进行预处理。都已#号开始。下面就是预定义float类型精度的预处理指令：
 
-```c
+```glsl
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -168,7 +162,7 @@ precision mediump float;
 
 下面是我们在GLSL ES中可能用到的三种预处理指令。
 
-```c
+```glsl
 #if 条件表达式
   //If 如果条件比倒是为真，执行这里
 #endif
@@ -199,39 +193,37 @@ GL_ES//在OpenGL ES2.0中定义为1
 GL_FRAGEMENT_PRECISION_HIGH//片元着色器支持highp精度
 ```
 
-### GLSL默认值 
+### GLSL默认值
 
 顶点着色器
 
-| 名称         | 类型  | 描述                                              |
-| ------------ | ----- | ------------------------------------------------- |
-| gl_Color     | vec4  | 输入变量-表示顶点的主颜色                         |
-| gl_Normal    | vec3  | 输入变量-表示顶点的法线值                         |
-| gl_Vertex    | vec4  | 输入变量-表示顶点位置                             |
-| gl_PointSize | float | 输入变量-点的大小                                 |
+| 名称           | 类型    | 描述                        |
+| ------------ | ----- | ------------------------- |
+| gl_Color     | vec4  | 输入变量-表示顶点的主颜色             |
+| gl_Normal    | vec3  | 输入变量-表示顶点的法线值             |
+| gl_Vertex    | vec4  | 输入变量-表示顶点位置               |
+| gl_PointSize | float | 输入变量-点的大小                 |
 | gl_Position  | vec4  | 输出变量-变换后的顶点位置，顶点着色器必须写这个值 |
 
 ​    
 
  片段着色器
 
-| 名称           | 类型  | 描述                                                         |
-| -------------- | ----- | ------------------------------------------------------------ |
-| gl_Color       | vec4  | 插值后的主颜色，只读                                         |
-| gl_TexCoord    | vec4  | 插值后的纹理坐标，只读                                       |
-| gl_FragColor   | vec4  | 输出的颜色                                                   |
-| gl_FragCoord   | vec4  | 片元在窗口的坐标位置：x, y, z, 1/w，只读, x和y是片段的窗口空间坐标，原点为窗口的左下角, z为深度值 |
+| 名称             | 类型    | 描述                                                                    |
+| -------------- | ----- | --------------------------------------------------------------------- |
+| gl_Color       | vec4  | 插值后的主颜色，只读                                                            |
+| gl_TexCoord    | vec4  | 插值后的纹理坐标，只读                                                           |
+| gl_FragColor   | vec4  | 输出的颜色                                                                 |
+| gl_FragCoord   | vec4  | 片元在窗口的坐标位置：x, y, z, 1/w，只读, x和y是片段的窗口空间坐标，原点为窗口的左下角, z为深度值            |
 | gl_FragDepth   | float | 输出变量-片段深度值，可设置片段的深度值，如果着色器没有写入值到gl_FragDepth，它会自动取用`gl_FragCoord.z`的值 |
-| gl_PointCoord  | vec4  | 点的纹理坐标- 只读                                           |
-| gl_FrontFacing | bool  | 是否为正面                                                   |
-
-
+| gl_PointCoord  | vec4  | 点的纹理坐标- 只读                                                            |
+| gl_FrontFacing | bool  | 是否为正面                                                                 |
 
 ## 顶点着色器
 
 一个顶点着色器的工作是生成裁剪空间坐标值，通常是以下的形式
 
-```c
+```glsl
 void main() {
    gl_Position = doMathToMakeClipspaceCoordinates
 }
@@ -284,7 +276,7 @@ gl.vertexAttribPointer(positionLoc, numComponents, type, false, stride, offset);
 
 在 [WebGL 基础概念](https://zhuanlan.zhihu.com/p/45483053) 中示范了不做任何运算直接将数据传递给 `gl_Position`。
 
-```c
+```glsl
 attribute vec4 a_position;
 
 void main() {
@@ -300,7 +292,7 @@ void main() {
 
 全局变量在一次绘制过程中传递给着色器的值都一样，在下面的一个简单的例子中，用全局变量给顶点着色器添加了一个偏移量
 
-```c
+```glsl
 attribute vec4 a_position;
 uniform vec4 u_offset;
 
@@ -392,7 +384,7 @@ gl.uniform2fv(someVec2Element2Loc, [5, 6]);  // set element 2
 
 创建结构体
 
-```c
+```glsl
 struct SomeStruct {
   bool active;
   vec2 someVec2;
@@ -411,7 +403,7 @@ var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, "u_someThing.someV
 
 创建结构体数组
 
-```c
+```glsl
 struct Light {
     vec3 Position;
     vec4 Color;
@@ -427,13 +419,11 @@ var someThingSomeVec2Loc = gl.getUniformLocation(someProgram, "lights[0].Color")
 //light[1],light[2],...
 ```
 
-
-
 ## 片段着色器
 
 一个片段着色器的工作是为当前光栅化的像素提供颜色值，通常是以下的形式
 
-```c
+```glsl
 precision mediump float;
 
 void main() {
@@ -449,13 +439,11 @@ void main() {
 2. Textures 纹理 (从纹理，数据像素中获取的数据)
 3. Varyings 可变量 (顶点着色器中提供并且经过差值后的数据)
 
-
-
 ## Textures 纹理
 
 在着色器中获取纹理信息，可以先创建一个 `sampler2D` 类型全局变量，然后用GLSL方法 `texture2D` 从纹理中提取信息。
 
-```c
+```glsl
 precision mediump float;
 uniform sampler2D u_texture;
 
@@ -508,7 +496,7 @@ gl.uniform1i(someSamplerLoc, unit);
 
 顶点着色器
 
-```c
+```glsl
 attribute vec4 a_position;
 uniform vec4 u_offset;
 varying vec4 v_positionWithOffset;
@@ -521,7 +509,7 @@ void main() {
 
 片段着色器
 
-```c
+```glsl
 precision mediump float;
 varying vec4 v_positionWithOffset;
 
@@ -540,7 +528,7 @@ GLSL 全称是 Graphics Library Shader Language （图形库着色器语言）�
 
 你可以做一些运算例如常量和矢量的乘法。
 
-```c
+```glsl
 vec4 a = vec4(1, 2, 3, 4);
 vec4 b = a * 2.0;
 // b 现在是 vec4(2, 4, 6, 8);
@@ -548,7 +536,7 @@ vec4 b = a * 2.0;
 
 它同样可以做矩阵乘法以及矢量和矩阵的乘法
 
-```c
+```glsl
 mat4 a = ???
 mat4 b = ???
 mat4 c = a * b;
@@ -559,7 +547,7 @@ vec4 y = c * v;
 
 他还为矢量数据提供多种分量选择器，例如 vec4
 
-```c
+```glsl
 vec4 v;
 ```
 
@@ -570,7 +558,7 @@ vec4 v;
 
 它还支持矢量**调制**，意味者你可以交换或重复分量。
 
-```c
+```glsl
 v.yyyy //和下面是一样的
 vec4(v.y, v.y, v.y, v.y)
 
@@ -580,7 +568,7 @@ vec4(v.b, v.g, v.r, v.a)
 
 当构造一个矢量或矩阵时可以一次提供多个分量，例如
 
-```c
+```glsl
 vec4(v.rgb, 1)//和下面是一样的
 vec4(v.r, v.g, v.b, 1)
 
@@ -588,17 +576,15 @@ vec4(1) //和下面相同
 vec4(1, 1, 1, 1)
 ```
 
-
-
 值得注意的是 GLSL 是一个强类型的语言。
 
-```c
+```glsl
 float f = 1;  // 错误，1是int类型，不能将int型赋值给float
 ```
 
 正确的方式是
 
-```c
+```glsl
 float f = 1.0;      // 使用float
 float f = float(1)  // 转换integer为float
 ```
@@ -607,22 +593,20 @@ float f = float(1)  // 转换integer为float
 
 GLSL 有一系列内置方法，其中大多数运算支持多种数据类型，并且一次可以运算多个分量，例如
 
-```c
+```glsl
 T sin(T angle)
 ```
 
 T可以是 `float`, `vec2`, `vec3` 或 `vec4` 。如果你传的是 `vec4` 返回的也是 `vec4`, 返回结果对应每个分量的正弦值。换句话说如果 `v` 是 `vec4` 类型。那么
 
-```c
+```glsl
 vec4 s = sin(v);//和下面是一样的
 vec4 s = vec4(sin(v.x), sin(v.y), sin(v.z), sin(v.w));
 ```
 
-
-
 有时一个参数是浮点型而剩下的都是 `T` ，意思是那个浮点数据会作为所有其他参数的一个新分量。例如如果 `v1` 和 `v2` 是 `vec4` 同时 `f` 是浮点型，那么
 
-```c
+```glsl
 vec4 m = mix(v1, v2, f);
 //和以下等价
 vec4 m = vec4(

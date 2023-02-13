@@ -46,19 +46,15 @@ var vsSource = `#version 300 es
 </script>
 ```
 
-
-
 ### GLSL 300 es 的不同
 
 GLSL 300 es 和GLSL 100 es 有一些不同的地方，以下会一一讲述这些差异的地方
-
-
 
 #### 使用in代替attribute
 
 在GLSL 100中，定义顶点数据的变量，使用attribute关键词，如下：
 
-```c
+```glsl
 attribute vec4 aPosition;
 attribute vec2 aTexcoord;
 attribute vec3 aNormal;
@@ -66,50 +62,46 @@ attribute vec3 aNormal;
 
 而在GLSL 300 es中，使用in关键词，代码如下：
 
-```c
+```glsl
 in vec4 aPosition;
 in vec2 aTexcoord;
 in vec3 aNormal;
 ```
 
-
-
 #### varying 被in/out替代
 
 在GLSL 100，在顶点着色器和片元着色器中，通过varying关键词来声明varying变量，代码如下：
 
-```c
+```glsl
 varying vec2 vTexcoord;
 varying vec3 vNormal;
 ```
 
 而在GLSL 300 es中，顶点着色器中的varying变量用out声明，表示输出：
 
-```c
+```glsl
 out vec2 vTexcoord;
 out vec3 vNormal;
 ```
 
 在片元着色器中的varying变量用in声明，表示输如：
 
-```CQL
+```glsl
 in vec2 vTexcoord;
 in vec3 vNormal;
 ```
-
-
 
 #### GLSL 300 es 中没有内置变量gl_FragColor
 
 在GLSL 100 中，我们通过给内置变量gl_FragColor赋值来设置片元的输出颜色，代码如下：
 
-```c
+```glsl
 gl_FragColor = vec4(1,1,1, 1); // white
 ```
 
 而在GLSL 300 es中，需要自己定义一个输出颜色的变量，并在main函数中设置颜色值，代码如下：
 
-```c
+```glsl
 out vec4 myOutputColor;
  ......
 void main() {
@@ -119,13 +111,11 @@ void main() {
 
 > 此处，输入变量名可以随意定义，不过不能使用gl_开通，因此你也不能这样定义 out vec4 gl_FragColor;
 
-
-
 #### 用texture代替 texture2D、textureCube
 
 在GLSL 100中，通过texture2D方法获取2D贴图的像素，textureCube方法获取立方体贴图的像素，代码如下：
 
-```c
+```glsl
 uniform sampler2D uTexture;
 uniform samplerCube uCubeTexture;
  ......
@@ -137,7 +127,7 @@ void main(){
 
 而在GLSL 300 es中，只需要使用texture方法即可，该方法会通过传入的贴图对象，自动判断，代码如下：
 
-```c
+```glsl
 uniform sampler2D uTexture;
 uniform samplerCube uCubeTexture;
  ......
@@ -180,8 +170,6 @@ uniform float num;
 for(float i = 1.0; i <= num; i++)
 ```
 
-
-
 ## 顶点数组对象
 
 顶点数组对象（ VAO ）是这样一种对象： 它封装了与顶点处理器有关的所有数据，它记录了顶点缓存区和索引缓冲区的引用，以及顶点的各种属性的布局而不是实际的数据。
@@ -198,20 +186,20 @@ for(float i = 1.0; i <= num; i++)
 
 在WebGL1.0中VAO是通过扩展方式提供的，首先需要获取对应的扩展对象：
 
-```
+```javascript
 var ext = gl.getExtension("OES_vertex_array_object");
 ```
 
 如果返回的ext位null说明浏览器不支持该扩展。
 有了上面的ext对象，便可以创建VAO了：
 
-```
+```javascript
 var vao = ext.createVertexArrayOES();
 ```
 
 有了VAO对象之后，就可以进行绑定操作：
 
-```
+```javascript
 // bind
 ext.bindVertexArrayOES(vao);
 // unbind
@@ -300,15 +288,13 @@ gl.bindVertexArray(triangleArray2);
 gl.drawArrays(gl.TRIANGLES, 0, 3);
 ```
 
-
-
 ## 图元重启
 
 #### 启动图元重启功能
 
 在OPENGL中，可以通过以下方法启动图元重启功能：
 
-```
+```glsl
 glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
 ```
 
@@ -342,11 +328,9 @@ glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
 var MAX_UNSIGNED_SHORT = 65535;
 var num_vertices = 7;
 var indices = new Uint16Array([
-	0, 1, 2, MAX_UNSIGNED_SHORT, 2, 3, 1
+    0, 1, 2, MAX_UNSIGNED_SHORT, 2, 3, 1
 ]);
 ```
-
-
 
 ## 实例化数组
 
@@ -355,7 +339,7 @@ var indices = new Uint16Array([
 如果能够讲数据一次性发送给GPU，然后告诉WebGL使用一个绘制函数，绘制多个物体，就会更方便。这种技术，便是实例化技术。这种技术的实现思路，就是把原本的uniform变量，比如变换矩阵，变成attribute变量，然后把多个对象的矩阵数据，写在一起，然后创建所有矩阵的VBO对象（顶点缓存区）； 创建好缓冲区后，把所有对象的矩阵数据通过bufferData 上传到缓冲区中，这和普通的attribute变量的缓冲区没什么差别。
 接下来，就是和普通的VBO差异的部分：该缓冲区可以在多个对象之间共享。每个对象 取该缓冲区的一部分数据，作为attribute变量的值，方法如下:
 
-```
+```javascript
 gl.vertexAttribDivisor(index, divisor)
 ```
 
@@ -363,7 +347,7 @@ gl.vertexAttribDivisor(index, divisor)
 
 然后，通过调用如下方法进行绘制：
 
-```
+```javascript
 gl.drawArraysInstanced(mode, first, count, instanceCount);
 gl.drawElementsInstanced(mode, count, type, offset, instanceCount);
 ```
@@ -416,7 +400,7 @@ for(var i = 0;i < count;i ++){
         var y = ((j + 1) - count/2) / count * 4;
         var z = 0;
         offsetArray.push(x,y,z);
-		}
+        }
 }
 
 var offsets = new Float32Array(offsetArray)
@@ -465,7 +449,7 @@ gl.generateMipmap(gl.TEXTURE_2D);
 
 gl.texSubImage2D 在 WebGL2.0 与 WebGL1.0 同名函数区别
 
-```
+```js
 // WebGL 1:
 void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, ArrayBufferView? pixels);
 void gl.texSubImage2D(target, level, xoffset, yoffset, format, type, ImageData? pixels);
@@ -483,8 +467,6 @@ void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, ty
 void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, ImageData source);
 void gl.texSubImage2D(target, level, xoffset, yoffset, width, height, format, type, ArrayBufferView srcData, srcOffset);
 ```
-
-
 
 ## 变换反馈
 
